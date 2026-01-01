@@ -1,0 +1,8 @@
+RewriteEngine On
+
+
+RewriteRule ^$ public/index.php [L]
+RewriteRule ^((?!public/).*)$ public/$1 [L]
+RewriteCond %{DOCUMENT_ROOT}/public/%{REQUEST_FILENAME} !-f
+RewriteCond %{DOCUMENT_ROOT}/public/%{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ public/index.php [L]
