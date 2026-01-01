@@ -4,7 +4,7 @@
     <div class="col-md-6">
         <h1 class="display-5 mb-4">Attrapez-les tous !</h1>
 
-        <a href="/random" id="generateBtn" class="btn btn-warning btn-lg px-5 shadow-sm mb-5">
+        <a href="/" id="generateBtn" class="btn btn-warning btn-lg px-5 shadow-sm mb-5">
             <span id="btnText"><strong>Générer un Pokémon</strong></span>
             <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
         </a>
