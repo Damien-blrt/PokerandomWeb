@@ -35,7 +35,7 @@
             </div>
         <?php endif; ?>
     <?php endforeach; ?>
-    <?php if (!isset($pokemon)): ?>
+    <?php if (empty($pokemons)): ?>
         <div class="card-body text-center" style="border-radius: 20px 20px 0 0;">
             <h4 class="text-capitalize m-0">Erreur dans le chargement des pokemons, rechargez l'api avec :</h4>
             <div class="card-body text-center">
