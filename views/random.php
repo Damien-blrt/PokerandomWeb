@@ -21,6 +21,12 @@
             <div class="card shadow border-0 mx-auto" style="width: 22rem; border-radius: 20px; overflow: hidden;">
                 <div class="bg-primary py-4 text-white">
                     <h2 class="text-capitalize m-0"><?= h($pokemon['name']) ?></h2>
+                    <img
+                        src="<?= pokemonImageUrl($pokemon['id']) ?>"
+                        alt="<?= h($pokemon['name']) ?>"
+                        loading="lazy"
+                        class="img-fluid mx-auto d-block"
+                        style="max-height: 200px;">
                     <small>N° <?= $pokemon['id'] ?></small>
                 </div>
                 <div class="card-body">

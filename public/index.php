@@ -27,16 +27,9 @@ function h($string)
 // Helper pour l'API
 function getPokemonData($url)
 {
-    // ... (Votre fonction existante, inchangée) ...
     $json = @file_get_contents($url);
     if (!$json) return null;
-    $data = json_decode($json, true);
-    $types = [0 => 'None', 1 => 'Normal', 2 => 'Feu', 3 => 'Eau', 4 => 'Plante', 5 => 'Electrik', 6 => 'Glace', 7 => 'Combat', 8 => 'Poison', 9 => 'Sol', 10 => 'Vol', 11 => 'Psy', 12 => 'Insecte', 13 => 'Roche', 14 => 'Spectre', 15 => 'Dragon', 16 => 'Tenebres', 17 => 'Acier', 18 => 'Fee'];
-    if ($data) {
-        $data['type1'] = $types[$data['type1']] ?? 'Inconnu';
-        $data['type2'] = $types[$data['type2']] ?? 'None';
-    }
-    return $data;
+    return json_decode($json, true);
 }
 
 // Helper pour l'URL de l'image

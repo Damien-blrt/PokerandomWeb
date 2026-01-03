@@ -15,6 +15,7 @@
                         <img
                             src="<?= pokemonImageUrl($p['id']) ?>"
                             alt="<?= h($p['name']) ?>"
+                            loading="lazy"
                             class="img-fluid mx-auto d-block"
                             style="max-height: 200px;">
                         <small>N° <?= $p['id'] ?></small>
@@ -66,7 +67,9 @@
                         <img
                             src="<?= pokemonImageUrl($member['id']) ?>"
                             alt="<?= h($member['name']) ?>"
-                            class="img-fluid">
+                            loading="lazy"
+                            class="img-fluid mx-auto d-block"
+                            style="max-height: 50px;">
                         <div class="card-body p-2 text-center">
                             <small class="d-block text-muted">N° <?= $member['id'] ?></small>
                             <span class="badge bg-secondary" style="font-size: 0.6rem;"><?= $member['type1'] ?></span>
