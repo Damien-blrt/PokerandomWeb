@@ -14,6 +14,9 @@
                 </div>
                 <div class="card-body">
                     <span class="badge rounded-pill bg-secondary px-3"><?= $pokemon['type1'] ?></span>
+                    <?php if ($pokemon['type2'] !== 'None'): ?>
+                        <span class="badge rounded-pill bg-dark px-3"><?= $pokemon['type2'] ?></span>
+                    <?php endif; ?>
                     <p class="mt-3 italic">"<?= h($pokemon['description']) ?>"</p>
                 </div>
             </div>
