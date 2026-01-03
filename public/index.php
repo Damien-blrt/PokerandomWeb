@@ -39,6 +39,13 @@ function getPokemonData($url)
     return $data;
 }
 
+// Helper pour l'URL de l'image
+function pokemonImageUrl(int $id): string
+{
+    return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png";
+}
+
+
 // --- ROUTES ---
 
 $router->map('GET', '/', function () {

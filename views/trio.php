@@ -12,6 +12,11 @@
                 <div class="card shadow border-0 h-100" style="border-radius: 20px;">
                     <div class="bg-primary py-3 text-white text-center" style="border-radius: 20px 20px 0 0;">
                         <h4 class="text-capitalize m-0"><?= h($p['name']) ?></h4>
+                        <img
+                            src="<?= pokemonImageUrl($p['id']) ?>"
+                            alt="<?= h($p['name']) ?>"
+                            class="img-fluid mx-auto d-block"
+                            style="max-height: 200px;">
                         <small>N° <?= $p['id'] ?></small>
                     </div>
                     <div class="card-body text-center">
@@ -30,6 +35,15 @@
             </div>
         <?php endif; ?>
     <?php endforeach; ?>
+    <?php if (!isset($pokemon)): ?>
+        <div class="card-body text-center" style="border-radius: 20px 20px 0 0;">
+            <h4 class="text-capitalize m-0">Erreur dans le chargement des pokemons, rechargez l'api avec :</h4>
+            <div class="card-body text-center">
+                <a href="https://pokerandom.onrender.com/api/Pokemon" class="btn btn-primary w-100 mt-1">Ce lien ( peut prendre jusqu'à 2 minutes )</a>
+            </div>
+        </div>
+    <?php endif; ?>
+
 </div>
 
 <hr class="my-5">
@@ -49,6 +63,10 @@
                         <div class="card-header p-1 text-center bg-primary text-white" style="font-size: 0.8rem;">
                             <?= h($member['name']) ?>
                         </div>
+                        <img
+                            src="<?= pokemonImageUrl($member['id']) ?>"
+                            alt="<?= h($member['name']) ?>"
+                            class="img-fluid">
                         <div class="card-body p-2 text-center">
                             <small class="d-block text-muted">N° <?= $member['id'] ?></small>
                             <span class="badge bg-secondary" style="font-size: 0.6rem;"><?= $member['type1'] ?></span>
