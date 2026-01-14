@@ -1,112 +1,44 @@
 <?php
 require '../vendor/autoload.php';
 
-// 1. IMPORTANT : Démarrer la session tout en haut
+/* =========================
+   SESSION
+========================= */
 session_start();
 
-// Initialiser l'équipe si elle n'existe pas encore
 if (!isset($_SESSION['team'])) {
     $_SESSION['team'] = [];
 }
 
-// Optionnel : Une route pour vider l'équipe (Reset complet)
 if (isset($_GET['reset_team'])) {
     $_SESSION['team'] = [];
     header('Location: /trio');
     exit;
 }
 
+/* =========================
+   ROUTER
+========================= */
 $router = new AltoRouter();
 
-// Helper pour l'affichage
+/* =========================
+   HELPERS
+========================= */
 function h($string)
 {
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
 
-// Helper pour l'API
-function getPokemonData($url)
+function getPokemonData(string $url): ?array
 {
     $json = @file_get_contents($url);
     if (!$json) return null;
     return json_decode($json, true);
 }
 
-// Helper pour l'URL de l'image
 function pokemonImageUrl(int $id): string
 {
     return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png";
-}
-
-
-// --- ROUTES ---
-
-$router->map('GET', '/', function () {
-    // ... (Votre route home inchangée) ...
-    $pokemon = getPokemonData("https://pokerandom.onrender.com/api/Pokemon/random");
-    $title = "Accueil";
-    ob_start();
-    require '../views/random.php';
-    $content = ob_get_clean();
-    require '../views/layout.php';
-}, 'home');
-
-// 2. Modification de la route TRIO
-$router->map('GET', '/trio', function () {
-
-    // A. LOGIQUE D'AJOUT : Si un ID est passé dans l'URL (ex: /trio?add=25)
-    if (isset($_GET['add'])) {
-        $idToAdd = (int)$_GET['add'];
-        // On récupère les données précises du Pokémon choisi
-        $newMember = getPokemonData("https://pokerandom.onrender.com/api/Pokemon/" . $idToAdd);
-
-        if ($newMember) {
-            // On l'ajoute à la session
-            $_SESSION['team'][] = $newMember;
-        }
-
-        // On redirige vers /trio (sans paramètre) pour nettoyer l'URL et éviter de ré-ajouter en rafraîchissant
-        header('Location: /trio');
-        exit;
-    }
-
-    // B. GÉNÉRATION : On génère toujours 3 nouveaux aléatoires
-    $pokemons = [];
-    for ($i = 0; $i < 3; $i++) {
-        $pokemons[] = getPokemonData("https://pokerandom.onrender.com/api/Pokemon/random");
-    }
-
-    // C. RÉCUPÉRATION DE L'ÉQUIPE (pour l'affichage)
-    $myTeam = $_SESSION['team'];
-
-    $title = "Trio Aléatoire";
-    ob_start();
-    require '../views/trio.php';
-    $content = ob_get_clean();
-    require '../views/layout.php';
-}, 'trio');
-
-// ... (Le reste du fichier routeur/search reste inchangé) ...
-$router->map('GET', '/search', function () {
-    // ... code search existant ...
-    $pokemon = null;
-    $id = $_GET['id'] ?? null;
-    if ($id) {
-        $pokemon = getPokemonData("https://pokerandom.onrender.com/api/Pokemon/" . (int)$id);
-    }
-    $title = "Recherche";
-    ob_start();
-    require '../views/search.php';
-    $content = ob_get_clean();
-    require '../views/layout.php';
-}, 'search');
-
-$match = $router->match();
-if ($match && is_callable($match['target'])) {
-    call_user_func_array($match['target'], $match['params']);
-} else {
-    header($_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
-    echo "404 - Page non trouvée";
 }
 
 function pokemonGeneration(int $id): int
@@ -122,4 +54,100 @@ function pokemonGeneration(int $id): int
         $id <= 905 => 8,
         default => 9,
     };
+}
+
+/* =========================
+   NORMALISATION
+========================= */
+function normalizePokemon(array $pokemon): array
+{
+    $pokemon['type1'] = is_array($pokemon['type1'])
+        ? ($pokemon['type1']['name'] ?? 'Inconnu')
+        : ($pokemon['type1'] ?? 'Inconnu');
+
+    $pokemon['type2'] = is_array($pokemon['type2'])
+        ? ($pokemon['type2']['name'] ?? 'None')
+        : ($pokemon['type2'] ?? 'None');
+
+    return $pokemon;
+}
+
+/* =========================
+   ROUTES
+========================= */
+
+/* ---- HOME ---- */
+$router->map('GET', '/', function () {
+    $pokemon = getPokemonData("https://pokerandom.onrender.com/api/Pokemon/random");
+    if ($pokemon) {
+        $pokemon = normalizePokemon($pokemon);
+    }
+
+    $title = "Accueil";
+    ob_start();
+    require '../views/random.php';
+    $content = ob_get_clean();
+    require '../views/layout.php';
+}, 'home');
+
+/* ---- TRIO ---- */
+$router->map('GET', '/trio', function () {
+
+    /* AJOUT À L'ÉQUIPE */
+    if (isset($_GET['add'])) {
+        $id = (int)$_GET['add'];
+        $pokemon = getPokemonData("https://pokerandom.onrender.com/api/Pokemon/$id");
+
+        if ($pokemon) {
+            $_SESSION['team'][] = normalizePokemon($pokemon);
+        }
+
+        header('Location: /trio');
+        exit;
+    }
+
+    /* GÉNÉRATION DE 3 POKÉMON */
+    $pokemons = [];
+    for ($i = 0; $i < 3; $i++) {
+        $p = getPokemonData("https://pokerandom.onrender.com/api/Pokemon/random");
+        if ($p) {
+            $pokemons[] = normalizePokemon($p);
+        }
+    }
+
+    $myTeam = $_SESSION['team'];
+    $title = "Trio Aléatoire";
+
+    ob_start();
+    require '../views/trio.php';
+    $content = ob_get_clean();
+    require '../views/layout.php';
+}, 'trio');
+
+/* ---- SEARCH ---- */
+$router->map('GET', '/search', function () {
+    $pokemon = null;
+    if (!empty($_GET['id'])) {
+        $pokemon = getPokemonData("https://pokerandom.onrender.com/api/Pokemon/" . (int)$_GET['id']);
+        if ($pokemon) {
+            $pokemon = normalizePokemon($pokemon);
+        }
+    }
+
+    $title = "Recherche";
+    ob_start();
+    require '../views/search.php';
+    $content = ob_get_clean();
+    require '../views/layout.php';
+}, 'search');
+
+/* =========================
+   DISPATCH
+========================= */
+$match = $router->match();
+if ($match && is_callable($match['target'])) {
+    call_user_func_array($match['target'], $match['params']);
+} else {
+    header($_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
+    echo "404 - Page non trouvée";
 }

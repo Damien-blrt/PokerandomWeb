@@ -73,10 +73,11 @@
                             style="max-height: 50px;">
                         <div class="card-body p-2 text-center">
                             <small class="d-block text-muted">N° <?= $member['id'] ?></small>
-                            <span class="badge bg-info">Gén <?= pokemonGeneration($p['id']) ?></span>
+                            <span class="badge bg-info">Gén <?= pokemonGeneration($member['id']) ?></span>
                             <span class="badge bg-secondary" style="font-size: 0.6rem;"><?= $member['type1'] ?></span>
                             <?php if ($member['type2'] !== 'None'): ?>
                                 <span class="badge bg-dark" style="font-size: 0.6rem;"><?= $member['type2'] ?></span>
+                                
                             <?php endif; ?>
                         </div>
                     </div>

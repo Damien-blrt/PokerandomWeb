@@ -28,7 +28,7 @@
                         class="img-fluid mx-auto d-block"
                         style="max-height: 200px;">
                     <small>N° <?= $pokemon['id'] ?></small>
-                    <span class="badge bg-info">Gén <?= pokemonGeneration($p['id']) ?></span>
+                    <span class="badge bg-info">Gén <?= pokemonGeneration($pokemon['id']) ?></span>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
