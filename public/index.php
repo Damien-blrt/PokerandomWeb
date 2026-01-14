@@ -108,3 +108,18 @@ if ($match && is_callable($match['target'])) {
     header($_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
     echo "404 - Page non trouvée";
 }
+
+function pokemonGeneration(int $id): int
+{
+    return match (true) {
+        $id <= 151 => 1,
+        $id <= 251 => 2,
+        $id <= 386 => 3,
+        $id <= 493 => 4,
+        $id <= 649 => 5,
+        $id <= 721 => 6,
+        $id <= 809 => 7,
+        $id <= 905 => 8,
+        default => 9,
+    };
+}
