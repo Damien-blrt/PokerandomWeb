@@ -43,7 +43,15 @@
                 </div>
             </div>
         <?php else: ?>
-            <div class="alert alert-info">Le premier appel peut prendre environ 30 secondes pour que l'API démarre</div>
+            <div class="card-body text-center" style="border-radius: 20px 20px 0 0;">
+                <h4 class="text-capitalize m-0">Erreur ou chargement long ?</h4>
+                <p class="mt-2">Si rien ne s'affiche, l'API est peut-être en veille.</p>
+                <div class="card-body text-center">
+                    <a href="https://pokerandom.onrender.com/api/Pokemon" target="_blank" class="btn btn-primary w-100 mt-1">
+                        Réveiller l'API (peut prendre 2 min)
+                    </a>
+                </div>
+            </div>
         <?php endif; ?>
     </div>
 </div>
